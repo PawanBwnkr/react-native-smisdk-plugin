@@ -67,6 +67,42 @@ function fileCopy(srcFile, destFile, encoding) {
   fs.writeFileSync(destFile, content, encoding);
 }
 
+// update manifest file with app name
+function updateManifestFile(manifestPath, applicationClassName) {
+  console.log('updateManifestFile()');
+    var manifestXmlDoc= new DOMParser().parseFromString(fs.readFileSync(manifestPath, 'utf8'));
+    var attrApplication = manifestXmlDoc.getElementsByTagName("application");
+    // console.log('attrApplication:' + attrApplication[0]);
+    const attrApplicationLength = attrApplication[0].attributes.length;
+    console.log('attrApplicationLength:' + attrApplicationLength);
+    // insert/update android:name attribute to manifest
+
+    var i;
+	for (i = 0; i < attrApplicationLength; i++) {
+    	var attrNodeName = attrApplication[0].attributes[i].nodeName;
+    	console.log('attrNodeName:' + attrNodeName);
+    	if(attrNodeName.search('android:name')>=0){
+    		var attrNodeValue = attrApplication[0].attributes[i].nodeValue;
+    		console.log('attrNodeValue:' + attrNodeValue);
+    		if(attrNodeValue === ('.'+applicationClassName)){
+    			console.log('app class name matched');
+    		}else{
+    			console.log('app class name not matched:' + applicationClassName);
+    			attrApplication[0].removeAttribute(attrApplication[0].attributes[i].nodeName);
+				attrApplication[0].setAttribute('android:name ', '.' +applicationClassName);
+    			fs.writeFileSync(manifestPath, manifestXmlDoc, 'utf8');
+    		}
+    		break;
+    	}
+    	else if (i == attrApplicationLength-1){
+    		// android:name does not exist
+    		console.log('android:name does not exist in manifest file');
+    		attrApplication[0].setAttribute('android:name ', '.' +applicationClassName);
+    		fs.writeFileSync(manifestPath, manifestXmlDoc, 'utf8');
+    	}
+	}
+}
+
 
 //// Main function to perform integration
 function projectConfigAndroid(folder) {
@@ -104,46 +140,12 @@ function projectConfigAndroid(folder) {
 	var datamiAppFile = fs.readFileSync('ApplicationClass.txt', 'utf8')
 	if(datamiAppFile.search(packageNameStr)<0){
 		var datamiAppFile = insert(datamiAppFile, 0, packageNameStr);
-		// fs.writeFileSync('ApplicationClass.txt', datamiAppFileUpdated, 'utf8');
 	}
 	var datamiApplicationClassName = 'MainApplication';
 	fs.writeFileSync(appPackagePath+'/' + datamiApplicationClassName + '.java', datamiAppFile, 'utf8');
 
 	// update manifest with app name
-    var manifestXmlDoc= new DOMParser().parseFromString(fs.readFileSync(manifestPath, 'utf8'));
-    var attrApplication = manifestXmlDoc.getElementsByTagName("application");
-    // console.log('attrApplication:' + attrApplication[0]);
-    const attrApplicationLength = attrApplication[0].attributes.length;
-    console.log('attrApplicationLength:' + attrApplicationLength);
-    // insert/update android:name attribute to manifest
-
-    var i;
-	for (i = 0; i < attrApplicationLength; i++) {
-    	var attrNodeName = attrApplication[0].attributes[i].nodeName;
-    	console.log('attrNodeName:' + attrNodeName);
-    	if(attrNodeName.search('android:name')>=0){
-    		var attrNodeValue = attrApplication[0].attributes[i].nodeValue;
-    		console.log('attrNodeValue:' + attrNodeValue);
-    		if(attrNodeValue === ('.'+datamiApplicationClassName)){
-    			console.log('app class name matched');
-    		}else{
-    			console.log('app class name not matched:' + datamiApplicationClassName);
-    			attrApplication[0].removeAttribute(attrApplication[0].attributes[i].nodeName);
-				attrApplication[0].setAttribute('android:name ', '.' +datamiApplicationClassName);
-    			fs.writeFileSync(manifestPath, manifestXmlDoc, 'utf8');
-    		}
-    		break;
-    	}
-    	else if (i == attrApplicationLength-1){
-    		// android:name does not exist
-    		console.log('android:name does not exist in manifest file');
-    		attrApplication[0].setAttribute('android:name ', '.' +datamiApplicationClassName);
-    		fs.writeFileSync(manifestPath, manifestXmlDoc, 'utf8');
-    	}
-    	else{
-    		console.log('else + ' + i);
-    	}
-	}
+	updateManifestFile(manifestPath, datamiApplicationClassName);
   }
   else{
   	// Application class available
@@ -208,9 +210,10 @@ function projectConfigAndroid(folder) {
 						var lastchar = appfileNew.lastIndexOf("}");
 						appfileNew = insert(appfileNew, lastchar-1, onChangeMethod);
 
-		 			//var saved = fs.writeFileSync(mainApplicationPath, appfileNew, 'utf8');
+		 			fs.writeFileSync(mainApplicationPath, appfileNew, 'utf8');
 		 			// const appFileNew2 = fs.readFileSync(mainApplicationPath, 'utf8')
-		 			console.log('appFileNew: ' + appfileNew);
+		 			updateManifestFile(manifestPath, applicationClassName);
+
 	 		}
 	 		else{
 	 			console.log('Error MainReactPackage does not exist.');

@@ -4,7 +4,7 @@
   "description": "Datami React native plugin",
   "private": true,
   "scripts": {
-    "start": "node node_modules/react-native-smisdk-plugin/smisdk_integration.js start"
+    "preinstall": "node node_modules/react-native-smisdk-plugin/smisdk_integration.js start"
   },
    "dependencies": {
     "react": "16.4.1",

@@ -22,6 +22,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    //noinspection GradleCompatible
     compile 'com.facebook.react:react-native:+'
     compile 'com.datami:smisdk:+'
 }

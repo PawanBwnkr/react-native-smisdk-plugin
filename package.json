@@ -4,7 +4,11 @@
   "description": "Datami React native plugin",
   "private": true,
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start"
+    "start": "node node_modules/react-native-smisdk-plugin/smisdk_integration.js start"
+  },
+   "dependencies": {
+    "react": "16.4.1",
+    "react-native": "0.56.0",
   },
   "author": "Datami inc",
   "license": "Datami mobile solutions"

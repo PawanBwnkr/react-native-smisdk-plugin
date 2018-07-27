@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		813C9B81210B23E800D7AF72 /* AppDelegate+datami.m in Sources */ = {isa = PBXBuildFile; fileRef = 813C9B7F210B23E700D7AF72 /* AppDelegate+datami.m */; };
+		813C9C49210B4A7C00D7AF72 /* libsmisdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 813C9C48210B4A7C00D7AF72 /* libsmisdk.a */; };
 		B3E7B58A1CC2AC0600A0062D /* RNSmisdkIosPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RNSmisdkIosPlugin.m */; };
 /* End PBXBuildFile section */
 
@@ -27,6 +28,10 @@
 		134814201AA4EA6300B7C361 /* libRNSmisdkIosPlugin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNSmisdkIosPlugin.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		813C9B7F210B23E700D7AF72 /* AppDelegate+datami.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AppDelegate+datami.m"; sourceTree = "<group>"; };
 		813C9B80210B23E800D7AF72 /* AppDelegate+datami.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppDelegate+datami.h"; sourceTree = "<group>"; };
+		813C9C45210B4A7B00D7AF72 /* SmiUIWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmiUIWebView.h; sourceTree = "<group>"; };
+		813C9C46210B4A7B00D7AF72 /* SmiSdk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmiSdk.h; sourceTree = "<group>"; };
+		813C9C47210B4A7C00D7AF72 /* SmiAnalytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmiAnalytics.h; sourceTree = "<group>"; };
+		813C9C48210B4A7C00D7AF72 /* libsmisdk.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libsmisdk.a; sourceTree = "<group>"; };
 		B3E7B5881CC2AC0600A0062D /* RNSmisdkIosPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNSmisdkIosPlugin.h; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* RNSmisdkIosPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNSmisdkIosPlugin.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -36,6 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				813C9C49210B4A7C00D7AF72 /* libsmisdk.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,6 +59,10 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				813C9C48210B4A7C00D7AF72 /* libsmisdk.a */,
+				813C9C47210B4A7C00D7AF72 /* SmiAnalytics.h */,
+				813C9C46210B4A7B00D7AF72 /* SmiSdk.h */,
+				813C9C45210B4A7B00D7AF72 /* SmiUIWebView.h */,
 				813C9B80210B23E800D7AF72 /* AppDelegate+datami.h */,
 				813C9B7F210B23E700D7AF72 /* AppDelegate+datami.m */,
 				B3E7B5881CC2AC0600A0062D /* RNSmisdkIosPlugin.h */,
@@ -215,7 +225,10 @@
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
 				);
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = RNSmisdkIosPlugin;
 				SKIP_INSTALL = YES;
@@ -231,7 +244,10 @@
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
 				);
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = RNSmisdkIosPlugin;
 				SKIP_INSTALL = YES;

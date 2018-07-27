@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/author/RNSmisdkIosPlugin.git", :tag => "master" }
   s.source_files  = "RNSmisdkIosPlugin/**/*.{h,m}"
   s.requires_arc = true
-
+  s.dependency 'SmiSdk', :git => 'https://bitbucket.org/datami/ios-podspec.git'
 
   s.dependency "React"
   #s.dependency "others"

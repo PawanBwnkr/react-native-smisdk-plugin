@@ -1,7 +1,9 @@
 #import "AppDelegate.h"
 #import "SmiSdk.h"
+#import "RNDatamiEventManager.h"
 
 @interface AppDelegate (notification) 
-//	- (id) getCommandInstance:(NSString*)className;
 @property (strong, nonatomic) SmiResult *smiResult;
+@property (strong, nonatomic) RNDatamiEventManager *datamiEvt;
+
 @end

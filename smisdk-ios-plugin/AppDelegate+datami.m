@@ -1,4 +1,4 @@
-#import "AppDelegate+datami.h"
+#import "AppDelegate+Datami.h"
 #import "SmiSdk.h"
 #import "AppDelegate.h"
 #import <objc/runtime.h>
@@ -6,6 +6,8 @@
 @implementation AppDelegate (notification)
 
 @dynamic smiResult;
+@dynamic datamiEvt;
+
 
 
 + (void)load
@@ -31,10 +33,9 @@
     // connection made before Datami SDK initialization will be non-sponsored and will be
     // charged to the user.
 
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(handleNotification:)
-//                                                 name:SDSTATE_CHANGE_NOTIF object:nil];
-
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleNotification:)
+                                                 name:SDSTATE_CHANGE_NOTIF object:nil];
   NSString* apiKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"DATAMI_API_KEY"];
   NSDictionary *infoDict =  [[NSBundle mainBundle] infoDictionary];
   BOOL bMessaging = NO;
@@ -52,19 +53,19 @@
   }
 }
 //
-//- (void)handleNotification:(NSNotification *)notif {
-//  if([notif.name isEqualToString:SDSTATE_CHANGE_NOTIF])
-//  {
-//    SmiResult* sr =  notif.object;
-//    NSLog(@"receivedStateChage, sdState: %ld", (long)sr.sdState);
-//    [self sendEventWithName:@"DATAMI_EVENT" body:@{@"state": [NSNumber numberWithInteger:sr.sdState]}];
-//  }
-//  else
-//  {
-//    NSLog(@"Not a datami event");
-//    
-//  }
-//}
++(void)handleNotification:(NSNotification *)notif {
+  if([notif.name isEqualToString:SDSTATE_CHANGE_NOTIF])
+  {
+    SmiResult* sr =  notif.object;
+    NSLog(@"receivedStateChage, sdState: %ld", (long)sr.sdState);
+   // [self.datamiEvt sendEventWithName:@"DATAMI_EVENT" body:@{@"state": [NSNumber numberWithInteger:sr.sdState]}];
+  }
+  else
+  {
+    NSLog(@"Not a datami event");
+    
+  }
+}
 
 
 @end

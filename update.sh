@@ -21,11 +21,11 @@ grep -lr "defaultSessionConfiguration" $CUR_DIR --include=*.m  --include=*.mm | 
 done
 echo "========================================"
 echo $CUR_DIR;
-CUR_DIR=$CUR_DIR"react-native/React/React.xcodeproj/project.pbxproj";
+CUR_DIR=$CUR_DIR"react-native/React/third-party.xcconfig";
 echo $CUR_DIR
 echo "========================================"
 
-sed -i.bak 's|USER_HEADER_SEARCH_PATHS = ""|USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../react-native-smisdk-plugin/smisdk-ios-plugin"|g' $CUR_DIR;
+sed -i.bak 's|HEADER_SEARCH_PATHS =|HEADER_SEARCH_PATHS = $(SRCROOT)/../../react-native-smisdk-plugin/smisdk-ios-plugin|g' $CUR_DIR;
 
 # grep -n "HEADER_SEARCH_PATHS = (" $CUR_DIR | grep -Eo '^[^:]+' | while read -r line ; do
 # 	echo $line;

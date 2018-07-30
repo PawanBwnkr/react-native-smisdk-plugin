@@ -2,8 +2,6 @@
 CUR_DIR=`pwd`;
 CUR_DIR=$CUR_DIR"/../";
 
-neededLines="NSURLSessionConfiguration *aConfig = [NSURLSessionConfiguration defaultSessionConfiguration]; [SmiSdk registerAppConfiguration:aConfig]; NSURLSession *session = [NSURLSession sessionWithConfiguration: aConfig";
-
 grep -lr "defaultSessionConfiguration" $CUR_DIR --include=*.m  --include=*.mm | while read -r line ; do
 	echo $line;
 	sed -i.bak 's|\[NSURLSessionConfiguration defaultSessionConfiguration\]|aConfig|g' $line
@@ -14,6 +12,21 @@ grep -lr "defaultSessionConfiguration" $CUR_DIR --include=*.m  --include=*.mm | 
 	sed -i.bak ''"$linenum"'i\
 		NSURLSessionConfiguration *aConfig = [NSURLSessionConfiguration defaultSessionConfiguration];\
 	' $line;
-	echo '#import <React/SmiSdk.h>' | cat - $line | tee $line >> /dev/null
+
+	if [[ $line = *"react-native/React"* ]]; then
+	 	echo '#import "SmiSdk.h"' | cat - $line | tee $line >> /dev/null
+	 else
+	 	echo '#import <React/SmiSdk.h>' | cat - $line | tee $line >> /dev/null
+	fi
+done
+echo "========================================"
+echo $CUR_DIR;
+echo "========================================"
+
+grep -n "HEADER_SEARCH_PATHS = (" $CUR_DIR/react-native/React/React.xcodeproj/project.pbxproj | grep -Eo '^[^:]+' | while read -r line ; do
+
+	sed -i.bak ''"$line"'i\
+		"$(SRCROOT)/../../react-native-smisdk-plugin/smisdk-ios-plugin",\
+	' $CUR_DIR/react-native/React/React.xcodeproj/project.pbxproj;
 
 done

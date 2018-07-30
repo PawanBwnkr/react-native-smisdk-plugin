@@ -14,6 +14,6 @@ grep -lr "defaultSessionConfiguration" $CUR_DIR --include=*.m  --include=*.mm | 
 	sed -i.bak ''"$linenum"'i\
 		NSURLSessionConfiguration *aConfig = [NSURLSessionConfiguration defaultSessionConfiguration];\
 	' $line;
-	echo '#import <React/SmiSdk.h>' | cat - $line | tee $line
+	echo '#import <React/SmiSdk.h>' | cat - $line | tee $line >> /dev/null
 
 done

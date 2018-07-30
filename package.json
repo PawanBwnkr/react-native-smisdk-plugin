@@ -4,7 +4,8 @@
   "description": "Datami React native plugin",
   "private": true,
   "scripts": {
-    "postinstall": "node smisdk_integration.js start"
+    "postinstall": "node smisdk_integration.js start",
+    "postinstall": "sh update.sh",
   },
   "repository": {
     "type": "git",

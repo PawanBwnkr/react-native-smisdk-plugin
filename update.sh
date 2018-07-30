@@ -25,10 +25,12 @@ CUR_DIR=$CUR_DIR"react-native/React/React.xcodeproj/project.pbxproj";
 echo $CUR_DIR
 echo "========================================"
 
-grep -n "HEADER_SEARCH_PATHS = (" $CUR_DIR | grep -Eo '^[^:]+' | while read -r line ; do
-	echo $line;
-	sed -i.bak ''"$line"'i\
-		"$(SRCROOT)/../../react-native-smisdk-plugin/smisdk-ios-plugin",\
-	' $CUR_DIR;
+sed -i.bak 's|USER_HEADER_SEARCH_PATHS = ""|USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../react-native-smisdk-plugin/smisdk-ios-plugin"|g' $CUR_DIR;
 
-done
+# grep -n "HEADER_SEARCH_PATHS = (" $CUR_DIR | grep -Eo '^[^:]+' | while read -r line ; do
+# 	echo $line;
+# 	sed -i.bak ''"$line"'i\
+# 		"$(SRCROOT)/../../react-native-smisdk-plugin/smisdk-ios-plugin",\
+# 	' $CUR_DIR;
+
+# done

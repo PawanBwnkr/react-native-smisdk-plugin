@@ -21,12 +21,13 @@ grep -lr "defaultSessionConfiguration" $CUR_DIR --include=*.m  --include=*.mm | 
 done
 echo "========================================"
 echo $CUR_DIR;
+echo $CUR_DIRreact-native/React/React.xcodeproj/project.pbxproj
 echo "========================================"
 
-grep -n "HEADER_SEARCH_PATHS = (" $CUR_DIR/react-native/React/React.xcodeproj/project.pbxproj | grep -Eo '^[^:]+' | while read -r line ; do
-
+grep -n "HEADER_SEARCH_PATHS = (" $CUR_DIRreact-native/React/React.xcodeproj/project.pbxproj | grep -Eo '^[^:]+' | while read -r line ; do
+	echo $line;
 	sed -i.bak ''"$line"'i\
 		"$(SRCROOT)/../../react-native-smisdk-plugin/smisdk-ios-plugin",\
-	' $CUR_DIR/react-native/React/React.xcodeproj/project.pbxproj;
+	' $CUR_DIRreact-native/React/React.xcodeproj/project.pbxproj;
 
 done

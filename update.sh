@@ -5,7 +5,7 @@ CUR_DIR=$CUR_DIR"/../";
 grep -lr "defaultSessionConfiguration" $CUR_DIR --include=*.m  --include=*.mm | while read -r line ; do
 	# echo $line;
 	cp $line $line".backup"
-	initalLineCount=$(< "$line" wc - l);
+	initalLineCount=`<"$line" wc - l`;
 	sed -i.bak 's|\[NSURLSessionConfiguration defaultSessionConfiguration\]|aConfig|g' $line
 	linenum=`awk '/aConfig/{ print NR; exit }' $line`;
 		sed -i.bak ''"$linenum"'i\
@@ -20,7 +20,7 @@ grep -lr "defaultSessionConfiguration" $CUR_DIR --include=*.m  --include=*.mm | 
 	 else
 	 	echo '#import <React/SmiSdk.h>' | cat - $line | tee $line >> /dev/null
 	fi
-	finalLineCount=$(< "$line" wc - l);
+	finalLineCount=`< "$line" wc - l`;
 	if (( $finalLineCount > $initalLineCount )); then
     	echo "File Good to Go ==> $line"
     else

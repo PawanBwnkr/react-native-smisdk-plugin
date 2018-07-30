@@ -1,31 +1,21 @@
 {
   "name": "react-native-smisdk-plugin",
   "version": "1.0.0",
-  "description": "Simple module to sponsore the ReactNative interface",
+  "description": "Datami React native plugin",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel src --out-dir lib"
+    "postinstall": "node smisdk_integration.js start",
+    "postinstall": "sh update.sh"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/stefalda/ReactNativeLocalization.git"
+    "url": "https://Pawan0504@bitbucket.org/personal_testing/reactnative-smisdk-plugin.git"
   },
-  "keywords": [
-    "localization",
-    "internationalization",
-    "javascript",
-    "typescript",
-    "ios",
-    "android",
-    "react",
-    "react-native",
-    "react-component"
-  ],
   "dependencies": {
-    "react": "^16.4.1"
+    "react": "16.4.1",
+    "react-native": "0.56.0"
   },
-  "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.6.1"
-  }
+  "author": "Datami inc",
+  "license": "Datami mobile solutions",
+  "homepage": "https://Pawan0504@bitbucket.org/personal_testing/reactnative-smisdk-plugin"
 }

@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "postinstall": "node smisdk_integration.js start",
-    "postinstall": "sh update.sh",
+    "postinstall": "sh update.sh"
   },
   "repository": {
     "type": "git",

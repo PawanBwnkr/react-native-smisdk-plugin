@@ -11,8 +11,9 @@
 #import "RCTEventEmitter.h"
 #else
 #import <React/RCTEventEmitter.h>
+#import <React/RCTBridgeModule.h>
 #endif
 
-@interface RNDatamiEventManager : RCTEventEmitter 
+@interface RNDatamiEventManager : RCTEventEmitter <RCTBridgeModule>
 
 @end

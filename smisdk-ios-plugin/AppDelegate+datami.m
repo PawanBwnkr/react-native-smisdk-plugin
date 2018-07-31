@@ -69,6 +69,9 @@
     {
         SmiResult* sr =  notif.object;
         NSLog(@"receivedStateChage, sdState: %ld", (long)sr.sdState);
+        if(sr.sdState == SD_NOT_AVAILABLE) {
+            NSLog(@"receivedStateChage, sdState: SD_NOT_AVAILABLE with Reason %ld:", (long)sr.sdReason);
+        }
         // [self.datamiEvt sendEventWithName:@"DATAMI_EVENT" body:@{@"state": [NSNumber numberWithInteger:sr.sdState]}];
     }
     else

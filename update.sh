@@ -20,10 +20,18 @@ grep -lr "defaultSessionConfiguration" $CUR_DIR --include=*.m  --include=*.mm | 
 		' $line;
 
 		if [[ $line = *"react-native/React"* ]]; then
-		 	echo '#import "SmiSdk.h"' | cat - $line | tee $line >> /dev/null
-		 else
-		 	echo '#import <React/SmiSdk.h>' | cat - $line | tee $line >> /dev/null
-		fi
+				echo '#import "SmiSdk.h"' > temp.txt
+				cat $line >> temp.txt
+				rm $line
+				mv temp.txt $line
+			 	#echo '#import "SmiSdk.h"' | cat - $line | tee $line >> /dev/null
+			 else
+			 	echo '#import <React/SmiSdk.h>' > temp.txt
+				cat $line >> temp.txt
+				rm $line
+				mv temp.txt $line
+			 	# echo '#import <React/SmiSdk.h>' | cat - $line | tee $line >> /dev/null
+			fi
 		finalLineCount=`<$line wc -l`;
 		if (( $finalLineCount > $initalLineCount )); then
 	    	echo "File Good to Go ==> $line"
@@ -40,9 +48,17 @@ grep -lr "defaultSessionConfiguration" $CUR_DIR --include=*.m  --include=*.mm | 
 			' $line;
 
 			if [[ $line = *"react-native/React"* ]]; then
-			 	echo '#import "SmiSdk.h"' | cat - $line | tee $line >> /dev/null
+				echo '#import "SmiSdk.h"' > temp.txt
+				cat $line >> temp.txt
+				rm $line
+				mv temp.txt $line
+			 	#echo '#import "SmiSdk.h"' | cat - $line | tee $line >> /dev/null
 			 else
-			 	echo '#import <React/SmiSdk.h>' | cat - $line | tee $line >> /dev/null
+			 	echo '#import <React/SmiSdk.h>' > temp.txt
+				cat $line >> temp.txt
+				rm $line
+				mv temp.txt $line
+			 	# echo '#import <React/SmiSdk.h>' | cat - $line | tee $line >> /dev/null
 			fi
 		fi
 	fi

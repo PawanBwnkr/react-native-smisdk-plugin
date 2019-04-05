@@ -1,6 +1,6 @@
 {
   "name": "react-native-smisdk-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Datami React native plugin",
   "private": true,
   "scripts": {

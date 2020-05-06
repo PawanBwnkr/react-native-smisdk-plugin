@@ -11,8 +11,8 @@
     "url": "https://Pawan0504@bitbucket.org/personal_testing/reactnative-smisdk-plugin.git"
   },
   "peerDependencies": {
-    "react": "16.4.1",
-    "react-native": "0.56.0"
+    "react": "16.8.0",
+    "react-native": "0.62.2"
   },
   "author": "Datami inc",
   "license": "Datami mobile solutions",

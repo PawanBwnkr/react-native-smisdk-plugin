@@ -200,11 +200,12 @@
 
    			  const onChangeMethod = '\n@Override \n public void onChange(SmiResult smiResult) {\n SmiSdkReactModule.setSmiResultToModule(smiResult);\n}';
 
-   		 	  var intMainPackageIndex = appFile.search("new MainReactPackage()")
+   		 	  //var intMainPackageIndex = appFile.search("new MainReactPackage()")
+          var intMainPackageIndex = appFile.search(".getPackages();")
    		 	  console.log('intMainPackageIndex: ' + intMainPackageIndex);
    		 	  if(intMainPackageIndex>0){
    		 			// add package name
-   		 			var appfileNew = insert(appFile, intMainPackageIndex+22, smiPackageName);
+   		 			var appfileNew = insert(appFile, intMainPackageIndex+15, smiPackageName);
    		 			// add import
    		 			var intImportIndex = appFile.search("import")
    		 			appfileNew = insert(appfileNew, intImportIndex, packageImport);

@@ -61,26 +61,18 @@ function findStringsXml(folder) {
 };
 
 
-// update string.xml file
-function updateConfigurationFile(confFilePath) {
-  console.log('updateConfigurationFile()');
-  const smisdkApikey = '\n<string name="smisdk_apikey"></string>';
-  const smisdkShowMessaging = '\n<bool name="smisdk_show_messaging">true</bool>';
-  const smisdkExclusionDomin = '\n<array name="smisdk_exclusion_domin"></array>';
-
-  var stringsXmlDoc = fs.readFileSync(confFilePath, 'utf8');
-  var resourcesEndIndex = stringsXmlDoc.search("</resources>")
-  if (stringsXmlDoc.search('smisdk_apikey') < 0) {
-    stringsXmlDoc = insert(stringsXmlDoc, resourcesEndIndex - 1, smisdkApikey);
-  }
-  if (stringsXmlDoc.search('smisdk_show_messaging') < 0) {
-    stringsXmlDoc = insert(stringsXmlDoc, resourcesEndIndex - 1, smisdkShowMessaging);
-  }
-  if (stringsXmlDoc.search('smisdk_exclusion_domin') < 0) {
-    stringsXmlDoc = insert(stringsXmlDoc, resourcesEndIndex - 1, smisdkExclusionDomin);
-  }
-  fs.writeFileSync(confFilePath, stringsXmlDoc, 'utf8');
-}
+   // update string.xml file
+   function updateConfigurationFile(confFilePath){
+      console.log('updateConfigurationFile()');
+      const smisdkApikey = '\n<string name="smisdk_apikey"></string>';
+     
+      var stringsXmlDoc= fs.readFileSync(confFilePath, 'utf8');
+      var resourcesEndIndex = stringsXmlDoc.search("</resources>")
+      if(stringsXmlDoc.search('smisdk_apikey')<0){
+         stringsXmlDoc = insert(stringsXmlDoc, resourcesEndIndex-1, smisdkApikey);
+      }
+      fs.writeFileSync(confFilePath, stringsXmlDoc, 'utf8');
+   }
 
 // update manifest file with app name
 function updateManifestFile(manifestPath, applicationClassName) {
@@ -92,46 +84,147 @@ function updateManifestFile(manifestPath, applicationClassName) {
   console.log('attrApplicationLength:' + attrApplicationLength);
   // insert/update android:name attribute to manifest
 
-  var i;
-  for (i = 0; i < attrApplicationLength; i++) {
-    var attrNodeName = attrApplication[0].attributes[i].nodeName;
-    console.log('attrNodeName:' + attrNodeName);
-    if (attrNodeName.search('android:name') >= 0) {
-      var attrNodeValue = attrApplication[0].attributes[i].nodeValue;
-      console.log('attrNodeValue:' + attrNodeValue);
-      if (attrNodeValue === ('.' + applicationClassName)) {
-        console.log('app class name matched');
-      } else {
-        console.log('app class name not matched:' + applicationClassName);
-        attrApplication[0].removeAttribute(attrApplication[0].attributes[i].nodeName);
-        attrApplication[0].setAttribute('android:name ', '.' + applicationClassName);
-        fs.writeFileSync(manifestPath, manifestXmlDoc, 'utf8');
+      var i;
+   	for (i = 0; i < attrApplicationLength; i++) {
+       	var attrNodeName = attrApplication[0].attributes[i].nodeName;
+       	console.log('attrNodeName:' + attrNodeName);
+       	if(attrNodeName.search('android:name')>=0){
+       		var attrNodeValue = attrApplication[0].attributes[i].nodeValue;
+       		console.log('attrNodeValue:' + attrNodeValue);
+       		if(attrNodeValue === ('.'+applicationClassName)){
+       		   console.log('app class name matched');
+       		}else{
+       			console.log('app class name not matched:' + applicationClassName);
+       			attrApplication[0].removeAttribute(attrApplication[0].attributes[i].nodeName);
+   				attrApplication[0].setAttribute('android:name ', '.' +applicationClassName);
+       			fs.writeFileSync(manifestPath, manifestXmlDoc, 'utf8');
+       		}
+       		break;
+       	}
+       	else if (i == attrApplicationLength-1){
+       		// android:name does not exist
+       		console.log('android:name does not exist in manifest file');
+       		attrApplication[0].setAttribute('android:name ', '.' +applicationClassName);
+       		fs.writeFileSync(manifestPath, manifestXmlDoc, 'utf8');
+       	}
+
+   	}
+   }
+
+//Implementtion to add network security config.
+ function updateNetworkConfig(filePath){
+    // const filePath = "res/xml/network_security_config.xml";
+    console.log("network_security_config.xml path : "+filePath);
+
+    if(checkNetworkConfigExist(filePath)){
+      var xmlDoc = new DOMParser().parseFromString(fs.readFileSync(filePath, "utf-8"), "text/xml");
+      checkClearTextValue(xmlDoc, filePath);
+
+      if(checkDatamiDomain(xmlDoc)){
+        console.log("Datami Domain already available !!");
+      }else{
+        addDatamiDoamin(xmlDoc, filePath);
       }
-      break;
-    } else if (i == attrApplicationLength - 1) {
-      // android:name does not exist
-      console.log('android:name does not exist in manifest file');
-      attrApplication[0].setAttribute('android:name ', '.' + applicationClassName);
-      fs.writeFileSync(manifestPath, manifestXmlDoc, 'utf8');
+    }else{
+      createNewNetworkConfig(filePath);
+    }
+
+ }
+
+ function addDatamiDoamin(xmlDoc, filePath){
+    newElement = xmlDoc.createElement('domain');
+    textElement = xmlDoc.createTextNode('cloudmi.datami.com');
+    newElement.setAttribute("includeSubdomains", "true");
+    newElement.appendChild(textElement);
+    nodeNetworkConfig = xmlDoc.getElementsByTagName('domain-config')[0];
+    nodeNetworkConfig.appendChild(newElement);
+
+    console.log('nodeNetworkConfig: ' + nodeNetworkConfig.length);
+
+      fs.writeFileSync(filePath, xmlDoc, 'utf8');
+
+ }
+
+ function checkDatamiDomain(xmlDoc){
+  available = false;
+
+  nodeNetworkConfig = xmlDoc.getElementsByTagName('domain');
+  console.log('nodeNetworkConfig: ' + nodeNetworkConfig.length);
+
+  for(var i =0; i<nodeNetworkConfig.length; i++){
+    if(nodeNetworkConfig[i].nodeType ==1){
+      var domainName = nodeNetworkConfig[i].childNodes[0].nodeValue;
+      console.log("Name : "+domainName);
+      if(null != domainName && domainName.localeCompare('cloudmi.datami.com') == 0){
+        available = true;
+        break;
+      }
     }
   }
-}
+
+  return available;
+ }
+
+ function checkNetworkConfigExist(filePath){
+    return fs.existsSync(filePath, fs.constants.F_OK);
+ }
+
+ function createNewNetworkConfig(filePath){
+   var xmlString = `<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">cloudmi.datami.com</domain>
+    </domain-config>
+</network-security-config>`;
+
+    var xmlFile = fs.appendFileSync(filePath, xmlString, "utf-8");
+     
+      console.log("File created ...");
+
+ }
+
+ function checkClearTextValue(xmlDoc, filePath){
+    configChanged = false;
+
+    element = xmlDoc.getElementsByTagName('domain-config')[0];
+    attribute = element.getAttributeNode("cleartextTrafficPermitted");
+    if(null == attribute){
+      console.log("Clear Text Value not available so creating NEW ");
+      element.setAttribute("cleartextTrafficPermitted", "true");
+      configChanged = true;
+    }else{
+      if(true == attribute.nodeValue){
+        console.log("Clear Text Value alreaady set."+attribute.nodeValue);
+      }else{
+        configChanged = true;
+        element.setAttribute("cleartextTrafficPermitted", "true");
+        console.log("Clear Text Value set to true.");
+      }
+    }
+
+    if(configChanged){
+        fs.writeFileSync(filePath, xmlDoc, 'utf8');
+    }
+ }
 
 
-//// Main function to perform integration
-function projectConfigAndroid(folder) {
-  const androidAppFolder = findAndroidAppFolder(folder);
+   //// Main function to perform integration
+   function projectConfigAndroid(folder) {
+      const androidAppFolder = findAndroidAppFolder(folder);
 
-  if (!androidAppFolder) {
-    console.log('App folder not available.');
-    return null;
-  }
+      if (!androidAppFolder) {
+     	   console.log('App folder not available.');
+         return null;
+      }
 
-  const sourceDir = path.join(folder, androidAppFolder);
-  console.log('sourceDir: ' + sourceDir);
+      const sourceDir = path.join(folder, androidAppFolder);
+      console.log('sourceDir: ' + sourceDir);
 
-  const manifestPath = findManifest(sourceDir);
-  console.log('manifestPath: ' + manifestPath);
+      //update network security config
+      // updateNetworkConfig(sourceDir+'/src/main/res/xml/network_security_config.xml');
+
+      const manifestPath = findManifest(sourceDir);
+      console.log('manifestPath: ' + manifestPath);
 
   if (!manifestPath) {
     return null;
@@ -191,9 +284,9 @@ function projectConfigAndroid(folder) {
           const smiPackageName = ', new SmiSdkReactPackage()';
           const smiPackageNameFor62 = 'packages.add(new SmiSdkReactPackage());';
 
-          const packageImport = 'import com.datami.smi.SdStateChangeListener; \nimport com.datami.smi.SmiResult; \nimport com.datami.smi.SmiSdk; \nimport com.datami.smisdk_plugin.SmiSdkReactModule; \nimport com.datami.smisdk_plugin.SmiSdkReactPackage; \n';
+   		    const packageImport = 'import com.datami.smi.SdStateChangeListener; \nimport com.datami.smi.SmiResult; \nimport com.datami.smi.SmiVpnSdk; \nimport com.datami.smi.SmiSdk; \nimport com.datami.smisdk_plugin.SmiSdkReactModule; \nimport com.datami.smisdk_plugin.SmiSdkReactPackage; \nimport com.datami.smi.internal.MessagingType; \n';
 
-          const initSponsoredDataAPI = '\nSmiSdk.initSponsoredData(getResources().getString(R.string.smisdk_apikey), \nthis, null, R.mipmap.ic_launcher,\ngetResources().getBoolean(R.bool.smisdk_show_messaging),\nArrays.asList(getResources().getStringArray(R.array.smisdk_exclusion_domin)));';
+   		 	  const initSponsoredDataAPI = '\nSmiVpnSdk.initSponsoredData(getResources().getString(R.string.smisdk_apikey), \nthis, R.mipmap.ic_launcher,\nMessagingType.BOTH, true);';
 
           const onCreateMethod = '\n @Override \n public void onCreate() { \n  super.onCreate();' + initSponsoredDataAPI + ' \n}';
 

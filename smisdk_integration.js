@@ -185,8 +185,6 @@ function projectConfigAndroid(folder) {
 
         //Read application class
         const appFile = fs.readFileSync(mainApplicationPath, 'utf8');
-        console.log('appFile: ' + appFile);
-
         var isPackageExist = appFile.search('SmiSdkReactPackage');
         console.log('isPackageExist: ' + isPackageExist);
         if (isPackageExist < 0) {

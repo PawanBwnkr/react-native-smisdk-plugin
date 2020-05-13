@@ -6,6 +6,9 @@ import android.util.Log;
 import com.datami.smi.Analytics;
 import com.datami.smi.SmiResult;
 import com.datami.smi.SmiSdk;
+import com.datami.smi.SmiVpnSdk;
+import com.datami.smi.SdState;
+import com.datami.smi.internal.MessagingType;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -37,66 +40,38 @@ public class SmiSdkReactModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getSDAuth(String sdkKey, String url, String userId, Callback smiResultCB){
-        Log.d(TAG, "getSDAuth()");
-        try {
-            SmiResult result = SmiSdk.getSDAuth(sdkKey, mContext, url, userId);
-            if(smiResultCB!=null){
-                Log.d(TAG, "smiResultCB not null");
-                WritableMap payload = Arguments.createMap();
-                payload.putString("sd_state", result.getSdState().name());
-                payload.putString("sd_reason", result.getSdReason().name());
-                payload.putString("carrier_name", result.getCarrierName());
-                payload.putString("client_ip", result.getClientIp());
-                payload.putString("url", result.getUrl());
-                smiResultCB.invoke(payload);
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Exception: ", e);
-        }
+    public void getCurrentSdState(Callback stateCB){
+        Log.d(TAG, "getCurrentSdState()");
+        SdState st = SmiVpnSdk.getCurrentSdState();
+        if(stateCB!=null){
+            WritableMap payload = Arguments.createMap();
+            payload.putString("sd_state", st.toString());
+            stateCB.invoke(payload);
+        }        
     }
 
     @ReactMethod
-    public void getAnalytics(Callback smiAnalyticsCB)
-    {
-        if(mContext==null){
-            Log.i(TAG, "Null app context");
+    public void startSponsoredData(){
+        Log.d(TAG, "startSponsoredData()");
+        
+        SmiVpnSdk.startSponsoredData();
+    }
+
+    @ReactMethod
+    public void stopSponsoredData(){
+        Log.d(TAG, "stopSponsoredData()");
+        
+        SmiVpnSdk.stopSponsoredData();
+    }
+
+    @ReactMethod
+    public void initSponsoredData(String sdkKey, int iconId, MessagingType messagingType, boolean startVpn){
+        Log.d(TAG, "initSponsoredData()");
+        if(mContext){
+            Log.e(TAG, "App context is null!");
             return;
         }
-        Analytics smiAnalytics = SmiSdk.getAnalytics();
-        if(smiAnalyticsCB!=null){
-            WritableMap payload = Arguments.createMap();
-            payload.putDouble("cellular_session_time", smiAnalytics.getCellularSessionTime());
-            payload.putDouble("sd_data_usage", smiAnalytics.getSdDataUsage());
-            payload.putDouble("wifi_session_time", smiAnalytics.getWifiSessionTime());
-            smiAnalyticsCB.invoke(payload);
-        }
-    }
-
-    @ReactMethod
-    public void updateUserId(String id)
-    {
-        SmiSdk.updateUserId(id);
-    }
-
-    @ReactMethod
-    public void updateUserTag(ReadableArray userTags)
-    {
-        List<String> userTagsJava = null;
-        if( (userTags!=null) && (userTags.size()>0))
-        {
-            userTagsJava = new ArrayList<String>();
-            Log.d(TAG, "userTags length: "+userTags.size());
-            for(int i=0; i<userTags.size(); i++)
-            {
-                userTagsJava.add(userTags.getString(i));
-            }
-            SmiSdk.updateUserTag(userTagsJava);
-        }
-        else
-        {
-            Log.d(TAG, "userTags not available.");
-        }
+        SmiVpnSdk.initSponsoredData(sdkKey, mContext, iconId, messagingType, startVpn);
     }
 
     public static void setSmiResultToModule(SmiResult result){

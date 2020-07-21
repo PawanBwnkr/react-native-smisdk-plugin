@@ -39,7 +39,7 @@ function getApplicationClassName(folder) {
 
   const packages = files
     .map(filePath => fs.readFileSync(path.join(folder, filePath), 'utf8'))
-    .map(file => file.match(/class (.*) implements/))
+    .map(file => file.match(/class (.*) implements (.*)ReactApplication/))
     .filter(match => match);
 
     return packages.length ? packages[0][1] : null;

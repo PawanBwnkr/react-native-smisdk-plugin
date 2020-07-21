@@ -112,4 +112,11 @@ public class SmiSdkReactModule extends ReactContextBaseJavaModule {
 
         return payload;
     }
+
+    @ReactMethod
+    public boolean isVpnPermissionAccepted(){
+        boolean isAcc = SmiVpnSdk.isVpnPermissionAccepted();
+        Log.d(TAG, "isVpnPermissionAccepted: " + isAcc);
+        return isAcc;
+    }
 }
